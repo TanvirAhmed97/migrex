@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migraine Relief App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <style>
+    :root {
+      --background: #121212;
+      --text-primary: #FFFFFF;
+      --text-secondary: #B0B0B0;
+      --accent: #BB86FC;
+      --navbar-bg: #1F1B24;
+      --card-bg: #1E1E1E;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--text-primary);
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #BB86FC, #3700B3, #03DAC6);
+      background-size: 300% 300%;
+      animation: gradientAnimation 10s ease infinite;
+      z-index: -1;
+    }
+
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    nav {
+      background-color: var(--navbar-bg);
+      padding: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 10px;
+    }
+
+    .logo a {
+        color: var(--text-primary);
+        text-decoration: none;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    .hamburger {
+      display: none;
+      color: var(--text-primary);
+      font-size: 28px;
+      cursor: pointer;
+      padding: 5px;
+      border: none;
+      background: none;
+    }
+
+    nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    nav li {
+      margin: 0 10px;
+    }
+
+    nav a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    nav a:hover, nav a.active-link {
+      background-color: var(--accent);
+      color: var(--background);
+    }
+
+    .section {
+      padding: 40px 20px;
+      display: none;
+      max-width: 1200px;
+      margin: 20px auto;
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    h1, h2 {
+      color: var(--text-primary);
+      margin-top: 0;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 10px;
+    }
+
+    h1 { font-size: 2.2em; }
+    h2 { font-size: 1.8em; }
+
+    p, li {
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+    }
+
+    ul { padding-left: 20px; }
+    li { margin-bottom: 10px; }
+
+    .video-wrapper {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+        overflow: hidden;
+        margin-bottom: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    #symptom-form {
+        display: grid;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    #symptom-form label {
+        font-weight: bold;
+        color: var(--text-primary);
+    }
+
+    #symptom-form input[type="number"],
+    #symptom-form input[type="text"],
+    #symptom-form textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid var(--text-secondary);
+        background-color: var(--background);
+        color: var(--text-primary);
+        font-size: 1em;
+    }
+
+    #symptom-form input[type="number"]:focus,
+    #symptom-form input[type="text"]:focus,
+    #symptom-form textarea:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 5px var(--accent);
+    }
+
+    #symptom-form button[type="submit"] {
+        background-color: var(--accent);
+        color: var(--background);
+        border: none;
+        padding: 12px 20px;
+        font-size: 1em;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        justify-self: start;
+    }
+
+    #symptom-form button[type="submit"]:hover {
+        background-color: #a050e0;
+    }
+
+    #symptom-chart {
+        background-color: var(--background);
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+       .nav-container {
+           flex-wrap: wrap;
+       }
+
+      .logo {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .hamburger {
+        display: block;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+      }
+
+      nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: var(--navbar-bg);
+        padding: 10px 0;
+        position: static;
+        margin-top: 10px;
+      }
+
+      nav ul.active {
+        display: flex;
+      }
+
+      nav li {
+        margin: 10px 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      nav a {
+         display: block;
+         padding: 10px;
+      }
+
+      .section {
+        padding: 20px 15px;
+      }
+
+      h1 { font-size: 1.8em; }
+      h2 { font-size: 1.5em; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-container">
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle navigation menu">☰</button>
+      <ul id="nav-menu">
+        <li><a href="#migraine-info-bn" data-target="migraine-info-bn">মাইগ্রেন তথ্য (বাংলা)</a></li>
+        <li><a href="#tracker" data-target="tracker">Symptom Tracker</a></li>
+        <li><a href="#resources" data-target="resources">Resources</a></li>
+        <li><a href="#emergency" data-target="emergency">Emergency Guide</a></li>
+        <li><a href="#community" data-target="community">Community</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="content">
+    <section id="migraine-info-bn" class="section active" data-aos="fade-up">
+      <h1>মাইগ্রেন নিয়ন্ত্রণ এবং প্রতিরোধ</h1>
+      <p>মাইগ্রেন হলো একটি সাধারণ স্বাস্থ্য সমস্যা যা অনেককে প্রভাবিত করে। এই পৃষ্ঠায় আপনি মাইগ্রেনের কারণ, লক্ষণ এবং এটি নিয়ন্ত্রণ ও প্রতিরোধের উপায় সম্পর্কে তথ্য পাবেন।</p>
+      <h2>মাইগ্রেন কী?</h2>
+      <p>মাইগ্রেন হলো একটি স্নায়বিক অবস্থা যা তীব্র মাথাব্যথা, উল্টি, আলো এবং শব্দের প্রতি সংবেদনশীলতা সহ বিভিন্ন লক্ষণ দেখায়। এটি প্রায় প্রতি ৫ জন নারীর মধ্যে একজন এবং প্রতি ১৫ জন পুরুষের মধ্যে একজনকে প্রভাবিত করে।</p>
+      <h2>মাইগ্রেনের লক্ষণ</h2>
+      <ul>
+        <li>তীব্র, ধড়ফড়ে মাথাব্যথা</li>
+        <li>উল্টি বা বমি বমি ভাব</li>
+        <li>আলো এবং শব্দের প্রতি সংবেদনশীলতা</li>
+        <li>দৃষ্টি সমস্যা (যেমন, ঝিলমিলে দৃষ্টি বা অন্ধ দাগ)</li>
+        <li>শরীরের কিছু অংশে সনসনে অনুভূতি</li>
+      </ul>
+      <h2>মাইগ্রেনের কারণ</h2>
+      <p>মাইগ্রেনের সঠিক কারণ অজানা, তবে জেনেটিক এবং পরিবেশগত কারণগুলি এতে ভূমিকা রাখে। সাধারণ ট্রিগারগুলির মধ্যে রয়েছে:</p>
+      <ul>
+        <li>স্ট্রেস</li>
+        <li>নির্দিষ্ট খাবার (চকলেট, পনির, অ্যালকোহল)</li>
+        <li>ঘুমের অভাব</li>
+        <li>হরমোনাল পরিবর্তন</li>
+        <li>উজ্জ্বল আলো বা উচ্চ শব্দ</li>
+      </ul>
+      <h2>মাইগ্রেন প্রতিরোধের টিপস</h2>
+      <ul>
+        <li>মাইগ্রেন ডায়েরি বজায় রাখুন: ঘটনা এবং ট্রিগার ট্র্যাক করুন।</li>
+        <li>পর্যাপ্ত ঘুম নিন: রাতে ৭-৯ ঘণ্টা ঘুমান।</li>
+        <li>নিয়মিত খাবার খান: রক্তের সুগার স্থিতিশীল রাখুন।</li>
+        <li>জলপান করুন: প্রচুর পানি পান করে নির্জলীকরণ এড়ান।</li>
+        <li>নিয়মিত ব্যায়াম করুন: শারীরিক ক্রিয়াকলাপ মাইগ্রেন কমায়।</li>
+        <li>স্ট্রেস ম্যানেজমেন্ট: ধ্যান বা যোগব্যায়াম করুন।</li>
+        <li>নির্দেশিত ওষুধ গ্রহণ করুন: চিকিৎসকের পরামর্শ অনুসরণ করুন।</li>
+        <li>হরমোনাল থেরাপি বিবেচনা করুন: মাসিক চক্র সম্পর্কিত হলে।</li>
+        <li>ট্রান্সকাটেনিয়াস সুপ্রাভর্বিটাল নার্ভ স্টিমুলেশন ডিভাইস ব্যবহার করুন।</li>
+      </ul>
+      <h2>প্রাকৃতিক প্রতিকার</h2>
+      <ul>
+        <li>আহারের পরিবর্তন: নাইট্রেট, চকলেট, পনির, অ্যালকোহল, MSG, ঠান্ডা খাবার, প্রক্রিয়াজাত খাবার, পিকলস, নাট, শুকনো ফল, সংস্কৃত দুধ এড়ান।</li>
+        <li>ল্যাভেন্ডার বা পেপারমিন্ট তেল প্রয়োগ করুন: ব্যথা কমাতে সহায়ক।</li>
+        <li>এক্যুপ্রেশার চেষ্টা করুন: লক্ষণ হ্রাস করতে পারে।</li>
+        <li>ঘেন্টি ব্যবহার করুন: বমি বমি ভাব কমাতে।</li>
+        <li>বায়োফিডব্যাক প্র্যাকটিস করুন: লক্ষণ নিয়ন্ত্রণে সহায়ক।</li>
+        <li>ম্যাগনেসিয়াম-সমৃদ্ধ খাবার যোগ করুন: কাজু, তিল, সূর্যমুখী বীজ, ব্রাজিল নাট, হ্যাজেলনাট, বাদামের মাখন, পূর্ণ শস্য, ডিম, দুধ।</li>
+        <li>সাপ্তাহিক মালিশ পান: শিথিলতা বাড়ায়।</li>
+      </ul>
+    </section>
+
+    <section id="tracker" class="section" data-aos="fade-up">
+      <h1>Symptom Tracker</h1>
+      <a href="hh.html" style="color: var(--accent); font-weight: bold; font-size: 1.2em; text-decoration: underline; border: 2px solid var(--accent); padding: 5px; border-radius: 4px;">Talk With AI (Tanvir + 199 Doctors)</a>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      
+      
+      <form id="symptom-form">
+        <div>
+          <label for="pain-level">Pain Level (1-10):</label>
+          <input type="number" id="pain-level" min="1" max="10" required placeholder="Enter pain level" aria-label="Pain level from 1 to 10">
+        </div>
+        <div>
+          <label for="triggers">Triggers:</label>
+          <textarea id="triggers" rows="3" placeholder="Describe migraine triggers" aria-label="Describe migraine triggers"></textarea>
+        </div>
+        <div>
+          <label for="relief-methods">Relief Methods Used:</label>
+          <textarea id="relief-methods" rows="3" placeholder="Describe relief methods used" aria-label="Describe relief methods used"></textarea>
+        </div>
+        <div>
+          <label for="symptom-description">Description of Symptoms:</label>
+          <textarea id="symptom-description" rows="4" required placeholder="Describe your symptoms..." aria-label="Description of symptoms"></textarea>
+        </div>
+        <div>
+          <label for="remedy">What remedy did you try?</label>
+          <input type="text" id="remedy" required placeholder="Enter remedy or medication used" aria-label="Remedy tried">
+        </div>
+        <button type="submit">Log Symptom</button>
+      </form>
+      <div id="symptom-chart">
+          <canvas id="pain-chart"></canvas>
+      </div>
+    </section>
+
+    <section id="resources" class="section" data-aos="fade-up">
+      <h1>Resources</h1>
+      <p>Here you can find more resources for managing migraines, including articles, videos, and more.</p>
+
+      <div id="recovery-videos" data-aos="fade-up" style="margin-top: 30px;">
+        <h2>মাইগ্রেন থেকে সুস্থ হওয়ার উপায়</h2>
+        <p>এই ভিডিওগুলো এবং নোটগুলি আপনাকে মাইগ্রেন থেকে দ্রুত আরাম পেতে সাহায্য করবে। মন দিয়ে দেখুন, প্রয়োগ করুন, সুস্থ থাকুন।</p>
+     
+        <div class="video-wrapper">
+          <iframe
+            src="https://www.youtube.com/embed/gLOuDuoYjHs"
+            title="How to Relieve a Migraine Naturally"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+
+        <div class="video-wrapper">
+          <iframe
+            src="https://www.youtube.com/embed/57tSR1kqjPQ"
+            title="How to Relieve a Migraine Naturally"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        
+        <div class="video-wrapper">
+          <iframe
+            src="https://www.youtube.com/embed/Ucxf3I0Azfw"
+            title="How to Relieve a Migraine Naturally"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <div class="video-wrapper">
+          <iframe
+            src="https://www.youtube.com/embed/gsJKIRRTSR0"
+            title="How to Relieve a Migraine Naturally"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+
+        <div class="video-wrapper">
+          <iframe
+            src="https://www.youtube.com/embed/NE56XyroZY4"
+            title="How to Relieve a Migraine Naturally"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+
+   
+
+
+        
+        <div class="video-wrapper">
+          <iframe
+            src="https://youtube.com/embed/gsJKIRRTSR0?si=rKhq_qOL-7UAtCPH"
+            title="How to Relieve a Migraine Naturally"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+
+        <div class="video-wrapper">
+          <iframe
+          src="https://www.youtube.com/embed/7LxPe0moba0"
+          title="Managing Migraines: Tips and Tricks"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+    </section>
+
+    <section id="emergency" class="section" data-aos="fade-up">
+      <h1>Emergency Relief Guide</h1>
+      <p>Follow these steps for immediate migraine relief:</p>
+      <ul>
+        <li>Find a quiet, dark place to rest.</li>
+        <li>Apply a cold or warm compress to your forehead or neck.</li>
+        <li>Drink water to stay hydrated.</li>
+        <li>Take prescribed or over-the-counter pain relief medication if appropriate for you and as directed.</li>
+        <li>Practice deep breathing or relaxation techniques.</li>
+        <li>Avoid known triggers like strong smells, bright lights, or loud noises.</li>
+        <li>Consider sipping on ginger tea or peppermint tea if nausea is present.</li>
+      </ul>
+      <p><strong>When to seek urgent medical attention:</strong></p>
+      <ul>
+        <li>If this is the worst headache of your life.</li>
+        <li>If the headache starts very suddenly (thunderclap headache).</li>
+        <li>If the headache is accompanied by fever, stiff neck, confusion, seizure, double vision, weakness, or numbness.</li>
+        <li>If the headache pattern changes significantly.</li>
+      </ul>
+      <p>See quick relief videos in the <a href="#resources" data-target="resources">Resource Library</a>.</p>
+    </section>
+
+    <section id="community" class="section" data-aos="fade-up">
+      <h1>Community Support</h1>
+      <p>Connect with others, share experiences, and find support. Our community forum is currently under development and will be launching soon!</p>
+      <p>In the meantime, consider looking for reputable online migraine support groups or forums.</p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      once: true
+    });
+
+    // Mobile Menu Toggle
+    const navMenu = document.getElementById('nav-menu');
+    function toggleMenu() {
+      navMenu.classList.toggle('active');
+    }
+
+    // Section Navigation & Active Link Highlighting
+    const navLinks = document.querySelectorAll('nav a[data-target]');
+    const sections = document.querySelectorAll('main > .section');
+    const internalLinks = document.querySelectorAll('a[data-target]:not(nav a)');
+
+    function setActiveSection(targetId) {
+        console.log("Switching to section:", targetId);
+        sections.forEach(section => {
+            section.classList.remove('active');
+        });
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        } else {
+            console.error("Target section not found:", targetId);
+        }
+
+        navLinks.forEach(link => {
+            if (link.dataset.target === targetId) {
+                link.classList.add('active-link');
+            } else {
+                link.classList.remove('active-link');
+            }
+        });
+
+        if (navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+        }
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = e.target.dataset.target;
+        setActiveSection(targetId);
+      });
+    });
+
+    internalLinks.forEach(link => {
+         link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = e.target.dataset.target;
+            setActiveSection(targetId);
+         });
+    });
+
+    function setInitialActiveLink() {
+        const initialActiveSection = document.querySelector('main > .section.active');
+        if (initialActiveSection) {
+            const initialTargetId = initialActiveSection.id;
+            navLinks.forEach(link => {
+                if (link.dataset.target === initialTargetId) {
+                    link.classList.add('active-link');
+                } else {
+                    link.classList.remove('active-link');
+                }
+            });
+        }
+    }
+    document.addEventListener('DOMContentLoaded', setInitialActiveLink);
+
+    // Symptom Tracker Chart Logic
+    const ctx = document.getElementById('pain-chart')?.getContext('2d');
+    let painChart = null;
+    let chartData = {
+        labels: [],
+        datasets: [{
+            label: 'Pain Level (1-10)',
+            data: [],
+            borderColor: 'rgba(187, 134, 252, 1)',
+            backgroundColor: 'rgba(187, 134, 252, 0.2)',
+            borderWidth: 2,
+            tension: 0.1
+        }]
+    };
+
+    function initializeChart() {
+        if (ctx) {
+            painChart = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            ticks: { color: 'var(--text-secondary)' },
+                            grid: { color: 'rgba(176, 176, 176, 0.2)' }
+                        },
+                        x: {
+                            ticks: { color: 'var(--text-secondary)' },
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'var(--text-primary)'
+                            }
+                        }
+                    }
+                }
+            });
+            console.log("Chart initialized successfully.");
+        } else {
+            console.error("Could not find canvas context for pain chart (element ID: pain-chart).");
+        }
+    }
+
+    const symptomForm = document.getElementById('symptom-form');
+    if (symptomForm) {
+        symptomForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const painLevelInput = document.getElementById('pain-level');
+            const triggersInput = document.getElementById('triggers');
+            const reliefMethodsInput = document.getElementById('relief-methods');
+            const symptomDescriptionInput = document.getElementById('symptom-description');
+            const remedyInput = document.getElementById('remedy');
+
+            const painLevel = parseInt(painLevelInput.value, 10);
+            const triggers = triggersInput.value.trim();
+            const reliefMethods = reliefMethodsInput.value.trim();
+            const symptomDescription = symptomDescriptionInput.value.trim();
+            const remedy = remedyInput.value.trim();
+
+            if (symptomDescription === '' || remedy === '') {
+                alert("Please fill in the Symptom Description and Remedy fields.");
+                return;
+            }
+
+            if (!isNaN(painLevel) && painLevel >= 1 && painLevel <= 10) {
+                console.log("Symptom Logged:");
+                console.log("Pain Level:", painLevel);
+                console.log("Triggers:", triggers);
+                console.log("Relief Methods:", reliefMethods);
+                console.log("Symptom Description:", symptomDescription);
+                console.log("Remedy:", remedy);
+
+                if (painChart) {
+                    const newLabel = `Log ${chartData.labels.length + 1}`;
+                    chartData.labels.push(newLabel);
+                    chartData.datasets[0].data.push(painLevel);
+                    painChart.update();
+                    console.log("Chart updated.");
+                } else {
+                    console.warn("Chart not available, cannot update.");
+                }
+
+                alert("Symptom logged successfully!");
+            } else {
+                alert("Please enter a valid pain level between 1 and 10.");
+            }
+        });
+        console.log("Symptom form event listener attached.");
+    } else {
+        console.error("Symptom form not found (element ID: symptom-form).");
+    }
+
+    document.addEventListener('DOMContentLoaded', initializeChart);
+  </script>
+</body>
+</html>

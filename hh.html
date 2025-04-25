@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migraine Recovery Chatbot</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1a1a2e;
+      color: #eaeaea;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .chat-container {
+      background: #16213e;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+    }
+    .messages {
+      height: 300px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      border: 1px solid #0f3460;
+      padding: 10px;
+      border-radius: 8px;
+      background: #0f3460;
+    }
+    .input-container {
+      display: flex;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-right: 10px;
+    }
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: #00adb5;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #00969e;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h2>তোমার মাইগ্রেইন এর ১২ টা বাজাবো 🤖</h2>
+    <div class="messages" id="messages"></div>
+    <div class="input-container">
+      <input type="text" id="userInput" placeholder="Ask me how to recover...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const messagesDiv = document.getElementById('messages');
+
+    function addMessage(text, sender) {
+      const msg = document.createElement('div');
+      msg.textContent = `${sender}: ${text}`;
+      msg.style.margin = '5px 0';
+      messagesDiv.appendChild(msg);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function getBotResponse(input) {
+      input = input.toLowerCase();
+      if (input.includes("food")) {
+        return "Try magnesium-rich foods like spinach, avocado, and nuts. Avoid caffeine and aged cheese.";
+      } else if (input.includes("exercise")) {
+        return "Gentle yoga, stretching, or short walks can reduce stress and help with recovery.";
+      } else if (input.includes("trigger")) {
+        return "Common triggers include lack of sleep, stress, dehydration, and certain foods. Keep a journal to identify yours.";
+      } else if (input.includes("tips")) {
+        return "Stay hydrated, get consistent sleep, avoid screen time during migraines, and rest in a dark room.";
+      } else {
+        return "I'm here to help with food, exercise, tips, and trigger advice for migraines. Try asking me one of those!";
+      }
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('userInput');
+      const userText = input.value.trim();
+      if (userText === '') return;
+
+      addMessage(userText, 'You');
+      const botReply = getBotResponse(userText);
+      setTimeout(() => addMessage(botReply, 'Bot'), 600);
+      input.value = '';
+    }
+  </script>
+</body>
+</html>
